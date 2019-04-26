@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block main %}
-    {% for post in post_list %}
+    {% for post in page.object_list %}
     <article class="post post-{{post.pk}}}">
         <header class="entry-header">
             <h1 class="entry-title">
@@ -27,13 +27,20 @@
     <h3>暂时还没有发布文章</h3>
     {% endfor %}
 
-    <!-- 简单分页效果
+
     <div class="pagination-simple">
-        <a href="#">上一页</a>
-        <span class="current">第 6 页 / 共 11 页</span>
-        <a href="#">下一页</a>
+        {%if page.has_previous %}
+        <a href="?page={{page.previous_page_number}}">上一页</a>
+        <a href="?page={{page.number|add:-1}}">{{page.number|add:-1}}</a>
+
+        {% endif %}
+        <span class="current">第 {{page.number}} 页 / 共 {{page.paginator.num_pages}} 页</span>
+        {%if page.has_next%}
+        <a href="?page={{page.number|add:1}}">{{page.number|add:1}}</a>
+        <a href="?page={{page.next_page_number}}">下一页</a>
+        {% endif %}
     </div>
-    -->
+    {% comment %}
     <div class="pagination">
         <ul>
             <li><a href="">1</a></li>
@@ -47,4 +54,5 @@
             <li><a href="">11</a></li>
         </ul>
     </div>
+    {% endcomment %}
 {% endblock main %}

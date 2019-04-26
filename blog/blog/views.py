@@ -3,13 +3,28 @@ from django.http import HttpResponse
 from .models import Post,Category,Tag
 from comment.forms import CommentForm
 import markdown
-
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
     # return HttpResponse("55")
     post_list=Post.objects.all().order_by('-created_time')
-    return render(request,'blog/index.html',context={'post_list':post_list})
+    paginator = Paginator(post_list, 2)
+    pagenum = request.GET.get("page")
+    pagenum = 1 if pagenum == None else pagenum
+    page = paginator.page(pagenum)
+    context = {'page': page}
+
+    return render(request,'blog/index.html',context)
+
+def getpage(request):
+    objectlist = Post.objects.all()
+    paginator=Paginator(objectlist,2)
+    pagenum=request.GET.get("page")
+    pagenum=1 if pagenum==None else pagenum
+    page=paginator.page(pagenum)
+
+    return render(request,'blog/index.html',{'page':page})
 
 
 def single(request,pk):
